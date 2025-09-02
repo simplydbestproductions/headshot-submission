@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simply D' Best Productions has invited you to submit your Headshot.</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f8f8f8; }
+    form { max-width: 500px; margin: auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    input, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #007bff; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <form id="submissionForm" enctype="multipart/form-data">
+    <h2>Submit Your Headshots</h2>
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="email" name="email" placeholder="Email Address" required>
+    <input type="tel" name="phone" placeholder="Phone Number" required>
+    <textarea name="message" placeholder="Additional Info (optional)"></textarea>
+
+    <label>Upload up to 6 headshots:</label>
+    <input type="file" name="photos" accept="image/*" multiple required>
+
+    <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+    
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById("submissionForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      if (formData.getAll("photos").length > 6) {
+        alert("You can upload a maximum of 6 headshots.");
+        return;
+      }
+
+      const res = await fetch("/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await res.json();
+      alert(result.message);
+    });
+  </script>
+</body>
+</html>
