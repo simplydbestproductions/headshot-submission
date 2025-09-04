@@ -1,59 +1,117 @@
-const express = require("express");
-const nodemailer = require("nodemailer");
-const multer = require("multer");
-const fetch = require("node-fetch");
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 const app = express();
-const upload = multer({ dest: "uploads/" });
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static(".")); // serves index.html
+// Middleware
+app.use(express.static('public'));
+app.use(express.json());
 
-app.post("/submit", upload.array("photos", 6), async (req, res) => {
-  const { name, email, phone, message } = req.body;
-  const token = req.body["g-recaptcha-response"];
-
-  // Verify reCAPTCHA
-  const captchaVerify = await fetch(`https://www.google.com/recaptcha/api/siteverify`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `secret=${process.env.RECAPTCHA_SECRET}&response=${token}`
-  }).then(r => r.json());
-
-  if (!captchaVerify.success) {
-    return res.json({ message: "Captcha failed. Try again." });
-  }
-
-  // Email transporter
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = 'uploads/';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir);
     }
-  });
-
-  // Attach uploaded files
-  let attachments = req.files.map(file => ({
-    filename: file.originalname,
-    path: file.path
-  }));
-
-  let mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: "simplydbestproductions@gmail.com",
-    subject: `New Headshot Submission from ${name}`,
-    text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message || "N/A"}`,
-    attachments: attachments
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    res.json({ message: "Submission successful! We'll be in touch." });
-  } catch (err) {
-    console.error(err);
-    res.json({ message: "Error sending email. Please try again." });
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Sanitize filename
+    const originalname = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_');
+    cb(null, Date.now() + '-' + originalname);
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed!'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: fileFilter
+});
+
+// Email configuration - using environment variables for security
+const transporter = nodemailer.createTransporter({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER || 'simplydbestproductions@gmail.com',
+    pass: process.env.EMAIL_PASS || 'your_app_password_here'
+  }
+});
+
+// Routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.post('/submit-headshots', upload.array('headshots', 6), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: 'No files uploaded' });
+    }
+
+    // Prepare email
+    const mailOptions = {
+      from: process.env.EMAIL_USER || 'simplydbestproductions@gmail.com',
+      to: 'simplydbestproductions@gmail.com',
+      subject: 'New Headshot Submission',
+      html: `
+        <h2>New Headshot Submission</h2>
+        <p>You have received ${req.files.length} new headshot(s).</p>
+        <p>Submission time: ${new Date().toLocaleString()}</p>
+      `,
+      attachments: req.files.map(file => ({
+        filename: file.originalname,
+        path: file.path
+      }))
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+    
+    // Clean up uploaded files
+    req.files.forEach(file => {
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    });
+
+    res.json({ success: true, message: 'Headshots submitted successfully' });
+  } catch (error) {
+    console.error('Error processing submission:', error);
+    
+    // Clean up files on error
+    if (req.files) {
+      req.files.forEach(file => {
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      });
+    }
+    
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(500).json({ success: false, message: error.message });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
