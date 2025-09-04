@@ -1,511 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simply D' Best Productions - Headshot Submission</title>
-    <script src="https://www.google.com/recaptcha/api.js" async="" defer="defer"></script>
+    <title>Simply D'Best Productions - Headshot Submission</title>
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
         }
         
         .container {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            width: 100%;
             max-width: 800px;
-            padding: 30px;
-            margin: 20px auto;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
         }
         
         .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-        }
-        
-        h2 {
-            color: #2d3748;
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-        
-        .instructions {
-            color: #4a5568;
-            text-align: center;
-            margin-bottom: 25px;
-            line-height: 1.6;
-            font-size: 16px;
-        }
-        
-        .form-group {
+            max-width: 300px;
             margin-bottom: 20px;
         }
         
-        label {
-            display: block;
-            font-weight: 500;
-            color: #2d3748;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #d2d6dc;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        textarea:focus {
-            border-color: #4299e1;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-        }
-        
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .upload-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .upload-box {
-            border: 2px dashed #cbd5e0;
-            border-radius: 8px;
-            padding: 20px 15px;
-            text-align: center;
-            transition: all 0.3s ease;
-            background-color: #f8fafc;
-            grid-column: span 1;
-            position: relative;
-        }
-        
-        .optional-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: #e2e8f0;
-            color: #4a5568;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .upload-box:hover {
-            border-color: #4299e1;
-            background-color: #ebf4ff;
-        }
-        
-        .upload-box.highlight {
-            border-color: #4299e1;
-            background-color: #ebf4ff;
-        }
-        
-        .upload-icon {
-            font-size: 30px;
-            color: #4299e1;
+        h1 {
+            color: #2c3e50;
             margin-bottom: 10px;
         }
         
-        .upload-text {
-            color: #4a5568;
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            padding: 30px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #f8fafc;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background-color: #e8f4fc;
+        }
+        
+        .upload-area p {
             margin-bottom: 15px;
-            font-size: 14px;
-        }
-        
-        .browse-btn {
-            background-color: #4299e1;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        
-        .browse-btn:hover {
-            background-color: #3182ce;
+            color: #7f8c8d;
         }
         
         .file-input {
             display: none;
         }
         
-        .preview-container {
-            margin-top: 15px;
-            min-height: 80px;
+        .upload-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         
-        .image-preview {
-            max-width: 100%;
-            max-height: 80px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .upload-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .preview-item {
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 150px;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .remove-btn {
-            background-color: #e53e3e;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(231, 76, 60, 0.8);
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 12px;
-            margin-top: 8px;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
             cursor: pointer;
-        }
-        
-        .remove-btn:hover {
-            background-color: #c53030;
-        }
-        
-        .g-recaptcha {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .submit-btn {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            margin: 20px auto 0;
-            width: 200px;
-            box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(66, 153, 225, 0.4);
-        }
-        
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-        
-        .counter {
-            text-align: center;
-            color: #4a5568;
-            margin-bottom: 15px;
             font-size: 14px;
         }
         
-        @media (max-width: 768px) {
-            .upload-form {
-                grid-template-columns: 1fr;
+        .submit-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            display: block;
+            margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #219653;
+        }
+        
+        .submit-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .status-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .preview-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
-  </head>
-  <body>
-    <div class="container"> <img src="images/SDBP-Logo-2025.png" alt="Simply D' Best Productions"
-
-        class="logo">
-      <h2>Submit Your Headshots</h2>
-      <p class="instructions">You can upload up to 6 headshots from different
-        locations. All fields except the headshots are required.</p>
-      <form id="submissionForm" enctype="multipart/form-data">
-        <div class="form-group"> <input name="name" placeholder="Full Name" required=""
-
-            type="text"> </div>
-        <div class="form-group"> <input name="email" placeholder="Email Address"
-
-            required="" type="email"> </div>
-        <div class="form-group"> <input name="phone" placeholder="Phone Number"
-
-            required="" type="tel"> </div>
-        <div class="form-group"> <textarea name="message" placeholder="Additional Info (optional)"></textarea>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <!-- Replace with your actual logo URL -->
+            <img src="https://placeholder.com/300x100?text=Simply+D'Best+Productions" alt="Simply D'Best Productions Logo" class="logo">
+            <h1>Welcome Family, You've been invited to submit your headshot.</h1>
+        </header>
+        
+        <div class="instructions">
+            <p>Please upload up to 6 headshot images. Ensure that:</p>
+            <ul>
+                <li>Images are clear and well-lit</li>
+                <li>Your face is clearly visible</li>
+                <li>Each file is less than 5MB</li>
+                <li>Only JPG, PNG, or GIF formats are accepted</li>
+            </ul>
         </div>
-        <div class="counter"><span id="upload-counter">0</span> of 6 headshots
-          selected</div>
-        <div class="upload-form">
-          <!-- Location 1 -->
-          <div class="upload-box" id="box1"> <span class="optional-badge">Optional</span>
-            <div class="upload-icon">📁</div>
-            <span class="location-label">Headshot 1</span>
-            <p class="upload-text">Drag &amp; drop or select an image</p>
-            <button type="button" class="browse-btn">Browse Files</button> <input
-
-              name="photo1" class="file-input" data-location="1" accept="image/*"
-
-              type="file">
-            <div class="preview-container"></div>
-          </div>
-          <!-- Location 2 -->
-          <div class="upload-box" id="box2"> <span class="optional-badge">Optional</span>
-            <div class="upload-icon">📁</div>
-            <span class="location-label">Headshot 2</span>
-            <p class="upload-text">Drag &amp; drop or select an image</p>
-            <button type="button" class="browse-btn">Browse Files</button> <input
-
-              name="photo2" class="file-input" data-location="2" accept="image/*"
-
-              type="file">
-            <div class="preview-container"></div>
-          </div>
-          <!-- Location 3 -->
-          <div class="upload-box" id="box3"> <span class="optional-badge">Optional</span>
-            <div class="upload-icon">📁</div>
-            <span class="location-label">Headshot 3</span>
-            <p class="upload-text">Drag &amp; drop or select an image</p>
-            <button type="button" class="browse-btn">Browse Files</button> <input
-
-              name="photo3" class="file-input" data-location="3" accept="image/*"
-
-              type="file">
-            <div class="preview-container"></div>
-          </div>
-          <!-- Location 4 -->
-          <div class="upload-box" id="box4"> <span class="optional-badge">Optional</span>
-            <div class="upload-icon">📁</div>
-            <span class="location-label">Headshot 4</span>
-            <p class="upload-text">Drag &amp; drop or select an image</p>
-            <button type="button" class="browse-btn">Browse Files</button> <input
-
-              name="photo4" class="file-input" data-location="4" accept="image/*"
-
-              type="file">
-            <div class="preview-container"></div>
-          </div>
-          <!-- Location 5 -->
-          <div class="upload-box" id="box5"> <span class="optional-badge">Optional</span>
-            <div class="upload-icon">📁</div>
-            <span class="location-label">Headshot 5</span>
-            <p class="upload-text">Drag &amp; drop or select an image</p>
-            <button type="button" class="browse-btn">Browse Files</button> <input
-
-              name="photo5" class="file-input" data-location="5" accept="image/*"
-
-              type="file">
-            <div class="preview-container"></div>
-          </div>
-          <!-- Location 6 -->
-          <div class="upload-box" id="box6"> <span class="optional-badge">Optional</span>
-            <div class="upload-icon">📁</div>
-            <span class="location-label">Headshot 6</span>
-            <p class="upload-text">Drag &amp; drop or select an image</p>
-            <button type="button" class="browse-btn">Browse Files</button> <input
-
-              name="photo6" class="file-input" data-location="6" accept="image/*"
-
-              type="file">
-            <div class="preview-container"></div>
-          </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <p>Drag & drop your images here or</p>
+            <button class="upload-btn" id="browseBtn">Browse Files</button>
+            <input type="file" class="file-input" id="fileInput" multiple accept="image/jpeg,image/png,image/gif">
         </div>
-        <div class="g-recaptcha" data-sitekey="6LcoSbwrAAAAAM4hITnCHBlNwg3z_NgQbRvPMUQa"></div>
-        <button type="submit" class="submit-btn">Submit</button> </form>
+        
+        <div class="preview-container" id="previewContainer">
+            <!-- Image previews will be added here -->
+        </div>
+        
+        <button class="submit-btn" id="submitBtn" disabled>Submit Headshots</button>
+        
+        <div class="status-message" id="statusMessage"></div>
+        
+        <footer>
+            <p>&copy; 2023 Simply D'Best Productions. All rights reserved.</p>
+        </footer>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('submissionForm');
-            const uploadBoxes = document.querySelectorAll('.upload-box');
-            const fileInputs = document.querySelectorAll('.file-input');
-            const browseButtons = document.querySelectorAll('.browse-btn');
-            const uploadCounter = document.getElementById('upload-counter');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const uploadArea = document.getElementById('uploadArea');
+            const previewContainer = document.getElementById('previewContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMessage = document.getElementById('statusMessage');
             
-            // Initialize counter
-            updateCounter();
+            let uploadedFiles = [];
+            const MAX_FILES = 6;
+            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
             
-            // Add event listeners to each browse button
-            browseButtons.forEach((button, index) => {
-                button.addEventListener('click', () => {
-                    fileInputs[index].click();
-                });
+            // Open file dialog when clicking the browse button
+            browseBtn.addEventListener('click', () => {
+                fileInput.click();
             });
             
             // Handle file selection
-            fileInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const location = this.getAttribute('data-location');
-                    const file = this.files[0];
-                    
-                    if (file) {
-                        displayPreview(file, location);
-                        updateCounter();
-                    }
-                });
-            });
+            fileInput.addEventListener('change', handleFileSelect);
             
             // Drag and drop functionality
-            uploadBoxes.forEach(box => {
-                box.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.classList.add('highlight');
-                });
-                
-                box.addEventListener('dragleave', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.classList.remove('highlight');
-                });
-                
-                box.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.classList.remove('highlight');
-                    
-                    const location = this.id.replace('box', '');
-                    const file = e.dataTransfer.files[0];
-                    
-                    if (file && file.type.startsWith('image/')) {
-                        // Set the file to the corresponding input
-                        const input = document.querySelector(`.file-input[data-location="${location}"]`);
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(file);
-                        input.files = dataTransfer.files;
-                        
-                        // Trigger change event for the input
-                        const event = new Event('change');
-                        input.dispatchEvent(event);
-                    }
-                });
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.backgroundColor = '#e8f4fc';
+                uploadArea.style.borderColor = '#2980b9';
             });
             
-            // Display image preview
-            function displayPreview(file, location) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewContainer = document.querySelector(`#box${location} .preview-container`);
-                    previewContainer.innerHTML = '';
-                    
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.classList.add('image-preview');
-                    previewContainer.appendChild(img);
-                    
-                    const removeBtn = document.createElement('button');
-                    removeBtn.textContent = 'Remove';
-                    removeBtn.classList.add('remove-btn');
-                    removeBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const input = document.querySelector(`.file-input[data-location="${location}"]`);
-                        input.value = '';
-                        previewContainer.innerHTML = '';
-                        updateCounter();
-                    });
-                    
-                    previewContainer.appendChild(removeBtn);
-                };
-                reader.readAsDataURL(file);
-            }
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.backgroundColor = '#f8fafc';
+                uploadArea.style.borderColor = '#3498db';
+            });
             
-            // Update the upload counter
-            function updateCounter() {
-                let count = 0;
-                fileInputs.forEach(input => {
-                    if (input.files.length > 0) {
-                        count++;
-                    }
-                });
-                uploadCounter.textContent = count;
-            }
-            
-            // Form submission
-            form.addEventListener('submit', async function(e) {
+            uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
+                uploadArea.style.backgroundColor = '#f8fafc';
+                uploadArea.style.borderColor = '#3498db';
                 
-                // Check if at least one photo is uploaded
-                let hasFiles = false;
-                fileInputs.forEach(input => {
-                    if (input.files.length > 0) {
-                        hasFiles = true;
-                    }
-                });
-                
-                if (!hasFiles) {
-                    if (!confirm('You haven\'t uploaded any headshots. Are you sure you want to submit without any photos?')) {
-                        return;
-                    }
+                if (e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelect(e);
                 }
+            });
+            
+            // Handle file selection
+            function handleFileSelect(e) {
+                const files = e.target.files || e.dataTransfer.files;
                 
-                // Check if more than 6 photos are selected (shouldn't happen with this UI)
-                let totalFiles = 0;
-                fileInputs.forEach(input => {
-                    if (input.files.length > 0) {
-                        totalFiles++;
-                    }
-                });
-                
-                if (totalFiles > 6) {
-                    alert('You can upload a maximum of 6 headshots.');
+                if (uploadedFiles.length + files.length > MAX_FILES) {
+                    showStatus('You can only upload up to ' + MAX_FILES + ' images.', 'error');
                     return;
                 }
                 
-                // Verify reCAPTCHA
-                const recaptchaResponse = grecaptcha.getResponse();
-                if (!recaptchaResponse) {
-                    alert('Please complete the reCAPTCHA verification.');
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Validate file type
+                    if (!file.type.match('image.*')) {
+                        showStatus('Please upload only image files.', 'error');
+                        continue;
+                    }
+                    
+                    // Validate file size
+                    if (file.size > MAX_FILE_SIZE) {
+                        showStatus('File "' + file.name + '" exceeds the 5MB size limit.', 'error');
+                        continue;
+                    }
+                    
+                    uploadedFiles.push(file);
+                    
+                    // Create preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.innerHTML = 'X';
+                        removeBtn.addEventListener('click', function() {
+                            const index = uploadedFiles.indexOf(file);
+                            if (index !== -1) {
+                                uploadedFiles.splice(index, 1);
+                            }
+                            previewContainer.removeChild(previewItem);
+                            updateSubmitButton();
+                        });
+                        
+                        previewItem.appendChild(img);
+                        previewItem.appendChild(removeBtn);
+                        previewContainer.appendChild(previewItem);
+                        
+                        updateSubmitButton();
+                    };
+                    reader.readAsDataURL(file);
+                }
+                
+                // Reset the file input
+                fileInput.value = '';
+            }
+            
+            // Update submit button state
+            function updateSubmitButton() {
+                submitBtn.disabled = uploadedFiles.length === 0;
+            }
+            
+            // Show status message
+            function showStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message ' + type;
+                setTimeout(() => {
+                    statusMessage.className = 'status-message';
+                }, 5000);
+            }
+            
+            // Handle form submission
+            submitBtn.addEventListener('click', function() {
+                if (uploadedFiles.length === 0) {
+                    showStatus('Please upload at least one image.', 'error');
                     return;
                 }
                 
-                // Prepare form data for submission
-                const formData = new FormData(form);
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Uploading...';
                 
-                // In a real application, you would send formData to the server
-                try {
-                    // This is a simulation - replace with your actual endpoint
-                    const res = await fetch("/submit", {
-                        method: "POST",
-                        body: formData
-                    });
-                    
-                    const result = await res.json();
-                    alert(result.message);
-                    
-                    // Reset form after successful submission
-                    form.reset();
-                    document.querySelectorAll('.preview-container').forEach(container => {
-                        container.innerHTML = '';
-                    });
-                    updateCounter();
-                    grecaptcha.reset();
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('An error occurred during submission. Please try again.');
+                const formData = new FormData();
+                
+                for (let i = 0; i < uploadedFiles.length; i++) {
+                    formData.append('headshots', uploadedFiles[i]);
                 }
+                
+                fetch('/submit-headshots', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showStatus('Your headshots have been successfully submitted!', 'success');
+                        previewContainer.innerHTML = '';
+                        uploadedFiles = [];
+                        updateSubmitButton();
+                    } else {
+                        showStatus('Error: ' + data.message, 'error');
+                    }
+                    submitBtn.textContent = 'Submit Headshots';
+                })
+                .catch(error => {
+                    showStatus('An error occurred while submitting your headshots.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Headshots';
+                });
             });
         });
     </script>
-  </body>
+</body>
 </html>
