@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simply D'Best Productions Headshot Submission</title>
+  </head>
+  <body>
+    <div style="text-align:center;"><br>
+    </div>
+    <div style="text-align:center;">Simply D' Best Prouctions Headshot
+      Submission page</div>
+    <div style="text-align:center;"><img src="images/SDBP-Logo-2025.png" alt="Logo"
+        style="max-width:200px; margin:20px auto;"></div>
+    <div style="text-align:center;">Welcome Family! You've been invited to
+      submit your headshots for an upcoming or ongoing project.<br>
+    </div>
+    <div style="text-align: center;">
+      <form action="/submit" method="POST" enctype="multipart/form-data"> <label>Name:
+          <input name="name" required="" type="text"></label><br>
+        <br>
+        <label>Email: <input name="email" required="" type="email"></label><br>
+        <br>
+        <label>Phone: <input name="phone" type="tel"></label><br>
+        <br>
+        <p>Upload up to 6 images:</p>
+        <input name="file1" type="file"><br>
+        <input name="file2" type="file"><br>
+        <input name="file3" type="file"><br>
+        <input name="file4" type="file"><br>
+        <input name="file5" type="file"><br>
+        <input name="file6" type="file"><br>
+        <br>
+        <br>
+        <button type="submit">Submit</button> </form>
+    </div>
+    <p></p>
+    <div style="font-size: 0.9rem; color: #4a5568; margin-top: 2rem; text-align: center;">
+      <strong>Security Disclaimer:</strong><br>
+      This submission form is intended solely for authorized use by individuals
+      submitting headshots to Simply D’ Best Productions. All uploaded files and
+      personal information are handled with confidentiality and used exclusively
+      for casting and production purposes. Unauthorized access, disclosure, or
+      distribution of submitted materials is strictly prohibited. If you believe
+      you have reached this page in error, please exit immediately and contact
+      the administrator.<br>
+      <br>
+      By submitting this form, you acknowledge and consent to the secure
+      handling of your data in accordance with our operational standards.
+    </div>
+    <br>
+    <p></p>
+    <p style="text-align: center;">© Simply D' Best Productions</p>
+    <p><br>
+    </p>
+    <br>
+    <script src="https://www.google.com/recaptcha/api.js" async="" defer="defer"></script>
+  </body>
+</html>

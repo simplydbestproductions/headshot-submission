@@ -1,0 +1,104 @@
+// server.js
+require('dotenv').config();
+const express = require('express');
+const multer = require('multer');
+const nodemailer = require('nodemailer');
+const path = require('path');
+const fs = require('fs');
+const fetch = require('node-fetch');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
+
+// Multer config for handling up to 6 headshots
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => cb(null, uploadsDir),
+  filename: (_, file, cb) => {
+    const suffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, `${file.fieldname}-${suffix}${path.extname(file.originalname)}`);
+  }
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (_, file, cb) => {
+    file.mimetype.startsWith('image/') ? cb(null, true) : cb(new Error('Only image files allowed'), false);
+  }
+}).fields([...Array(6)].map((_, i) => ({ name: `photo${i + 1}`, maxCount: 1 })));
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Logger
+const log = (stage, data) => console.log(`🛠️ [${stage}]`, data);
+
+// Email transport setup
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+transporter.verify((err, success) => {
+  log(err ? 'Email Transport Error' : 'Email Transport Ready', err || success);
+});
+
+// Route: Serve homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Route: Handle form submission
+app.post('/submit', (req, res) => {
+  upload(req, res, async err => {
+    if (err) {
+      log('Upload Error', err.message);
+      return res.status(400).json({ success: false, message: err.message });
+    }
+
+    const { name, email, phone, message, 'g-recaptcha-response': recaptcha } = req.body;
+    log('Form Data Received', { name, email, phone, message });
+
+    if (!recaptcha) {
+      return res.status(400).json({ success: false, message: 'reCAPTCHA required' });
+    }
+
+    // Verify reCAPTCHA
+    const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptcha}`;
+    try {
+      const recaptchaRes = await fetch(verifyURL, { method: 'POST' });
+      const recaptchaData = await recaptchaRes.json();
+      if (!recaptchaData.success) {
+        log('reCAPTCHA Failed', recaptchaData);
+        return res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' });
+      }
+    } catch (error) {
+      log('reCAPTCHA Error', error.message);
+      return res.status(500).json({ success: false, message: 'reCAPTCHA verification error' });
+    }
+
+    // Collect uploaded files
+    const files = Object.values(req.files || {}).map(arr => arr[0]);
+    if (!files.length) {
+      return res.status(400).json({ success: false, message: 'Upload at least one headshot' });
+    }
+
+    // Prepare email
+    const attachments = files.map(f => ({
+      filename: f.originalname,
+      path: f.path
+    }));
+
+    const mailOptions = {
+      from: `"Headshot Submission" <${process.env.EMAIL_USER}>`,
+      to: 'simplydbestproductions@gmail.com',
+      subject: `New Headshot Submission from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message || 'N/A'}\nFiles: ${files.length}`,
+      attachments
