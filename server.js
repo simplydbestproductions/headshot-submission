@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Validate required environment variables
-['EMAIL_USER', 'EMAIL_PASS', 'RECAPTCHA_SECRET_KEY'].forEach(key => {
+['EMAIL_USER', 'EMAIL_PASS', '6LcoSbwrAAAAAE4rdhNt1yPRsFFNehqznkw5MiwP'].forEach(key => {
   if (!process.env[key]) {
     console.error(`❌ Missing required env variable: ${key}`);
     process.exit(1);
